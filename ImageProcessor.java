@@ -120,18 +120,20 @@ public class ImageProcessor {
 
   public static BufferedImage blurImage(BufferedImage original) {
     float[] blurMatrix = {
-            1 / 9f, 1 / 9f, 1 / 9f,
-            1 / 9f, 1 / 9f, 1 / 9f,
-            1 / 9f, 1 / 9f, 1 / 9f
+            1 / 16f, 1 / 8f, 1 / 16f,
+            1 / 8f, 1 / 4f, 1 / 8f,
+            1 / 16f, 1 / 8f, 1 / 16f
     };
     return applyFilter(original, blurMatrix, 3);
   }
 
   public static BufferedImage sharpenImage(BufferedImage original) {
     float[] sharpenMatrix = {
-            0.0f, -1.0f, 0.0f,
-            -1.0f, 5.0f, -1.0f,
-            0.0f, -1.0f, 0.0f
+            -1 / 8f, -1 / 8f, -1 / 8f, -1 / 8f, -1 / 8f,
+            -1 / 8f, 1 / 4f, 1 / 4f, 1 / 4f, -1 / 8f,
+            -1 / 8f, 1 / 4f, 1 , 1 / 4f, -1 / 8f,
+            -1 / 8f, 1 / 4f, 1 / 4f, 1 / 4f, -1 / 8f,
+            -1 / 8f, -1 / 8f, -1 / 8f, -1 / 8f, -1 / 8f,
     };
     return applyFilter(original, sharpenMatrix, 3);
   }
