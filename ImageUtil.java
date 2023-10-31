@@ -78,7 +78,8 @@ public class ImageUtil {
   }
 
   private static void writePPM(BufferedImage image, String filename) throws IOException {
-    try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
+    String relativePath = "res/" + filename;
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(relativePath))) {
       bw.write("P3\n");
       bw.write(image.getWidth() + " " + image.getHeight() + "\n");
       bw.write("255\n");
@@ -103,6 +104,7 @@ public class ImageUtil {
     } else {
       filename = "sample.ppm";
     }
+    /*
     try {
       BufferedImage image = ImageUtil.readImage(filename);
       // Perform some operations on the image if needed
@@ -111,6 +113,15 @@ public class ImageUtil {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    */
+    ImageScriptProcessor processor = new ImageScriptProcessor();
+    Scanner sc = new Scanner(System.in);
+    String command = "";
+    while(!command.equalsIgnoreCase("Quit")) {
+      command = sc.nextLine();
+      processor.executeCommand(command);
+    }
+    sc.close();
   }
 }
 
