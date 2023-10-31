@@ -42,10 +42,29 @@ public class ImageUtil {
   }
 
   public static BufferedImage readImage(String filename) throws IOException {
-    if (filename.endsWith(".ppm")) {
-      return readPPM(filename);
+    // Construct the relative path from the project's root directory
+    String relativePath = "res/" + filename;
+
+    File file = new File(relativePath);
+
+    // Check if the file exists and is readable
+    if (!file.exists()) {
+      System.out.println("File not found: " + file.getAbsolutePath());
+      return null; // Or throw an exception
+    } else if (!file.canRead()) {
+      System.out.println("File cannot be read: " + file.getAbsolutePath());
+      return null; // Or throw an exception
     } else {
-      return ImageIO.read(new File(filename));
+      try {
+        if (relativePath.endsWith(".ppm")) {
+          return readPPM(relativePath);
+        } else {
+          return ImageIO.read(file);
+        }
+      } catch (IOException e) {
+        System.out.println("Error reading the image file: " + e.getMessage());
+        throw e; // Re-throw the exception after logging
+      }
     }
   }
 
