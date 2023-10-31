@@ -56,7 +56,6 @@ public class ImageScriptProcessor {
         case "sepia":
           handleSepia(parts);
           break;
-        // ... Other cases for different commands ...
         default:
           System.out.println("Unknown command: " + parts[0]);
       }
@@ -211,7 +210,6 @@ public class ImageScriptProcessor {
 
   public static void main(String[] args) {
     ImageScriptProcessor processor = new ImageScriptProcessor();
-    // Can add code here to interactively take commands from user or to run a script file
   }
 
 }
