@@ -32,6 +32,15 @@ public class ImageScriptProcessor {
         case "luma-component":
           handleLumaComponent(parts);
           break;
+        case "red-component":
+          handleColorComponent(parts, 'R');
+          break;
+        case "green-component":
+          handleColorComponent(parts, 'G');
+          break;
+        case "blue-component":
+          handleColorComponent(parts, 'B');
+          break;
         case "brighten":
           handleBrighten(parts);
           break;
@@ -56,6 +65,9 @@ public class ImageScriptProcessor {
         case "sepia":
           handleSepia(parts);
           break;
+        case "run":
+          handleRunScript(parts);
+          break;
         default:
           System.out.println("Unknown command: " + parts[0]);
       }
@@ -63,7 +75,7 @@ public class ImageScriptProcessor {
       System.out.println("Error executing command: " + e.getMessage());
     }
   }
-
+  //handle load command
   private void handleLoad(String[] parts) throws IOException {
     if (parts.length != 3) throw new IllegalArgumentException("Invalid number of arguments for load.");
     String path = parts[1];
@@ -72,6 +84,7 @@ public class ImageScriptProcessor {
     imageMap.put(imageName, image);
   }
 
+  //handle save command
   private void handleSave(String[] parts) throws IOException {
     if (parts.length != 3) throw new IllegalArgumentException("Invalid number of arguments for save.");
     String path = parts[1];
@@ -81,6 +94,7 @@ public class ImageScriptProcessor {
     ImageUtil.saveImage(image, path);
   }
 
+  //handle value-component command
   private void handleValueComponent(String[] parts) {
     if (parts.length != 3) throw new IllegalArgumentException("Invalid number of arguments for value-component.");
     String imageName = parts[1];
@@ -90,6 +104,7 @@ public class ImageScriptProcessor {
     imageMap.put(destImageName, result);
   }
 
+  // handle intensity-component command
   private void handleIntensityComponent(String[] parts) {
     if (parts.length != 3) throw new IllegalArgumentException("Invalid number of arguments for intensity-component.");
     String imageName = parts[1];
@@ -99,6 +114,7 @@ public class ImageScriptProcessor {
     imageMap.put(destImageName, result);
   }
 
+  // handle luma-component command
   private void handleLumaComponent(String[] parts) {
     if (parts.length != 3) throw new IllegalArgumentException("Invalid number of arguments for luma-component.");
     String imageName = parts[1];
@@ -107,6 +123,19 @@ public class ImageScriptProcessor {
     BufferedImage result = ImageProcessor.extractLuma(image);
     imageMap.put(destImageName, result);
   }
+
+  // handle red/green/blue-component command
+  private void handleColorComponent(String[] parts, char component) {
+    if (parts.length != 3)
+      throw new IllegalArgumentException("Invalid number of arguments for color-component.");
+    String imageName = parts[1];
+    String destImageName = parts[2];
+    BufferedImage image = getImage(imageName);
+    BufferedImage result = ImageProcessor.extractComponent(image, component);
+    imageMap.put(destImageName, result);
+  }
+
+  // handle brighten command
   private void handleBrighten(String[] parts) {
     if (parts.length != 4) throw new IllegalArgumentException("Invalid number of arguments for brighten.");
     String imageName = parts[2];
@@ -188,12 +217,20 @@ public class ImageScriptProcessor {
     imageMap.put(destImageName, result);
   }
 
+  //method to handle the run command
+  private void handleRunScript(String[] parts) {
+    if (parts.length != 2) throw new IllegalArgumentException("Invalid number of arguments for run.");
+    String scriptPath = parts[1];
+    runScript(scriptPath);
+  }
+
   // Utility method to get image from the map
   private BufferedImage getImage(String imageName) {
     BufferedImage image = imageMap.get(imageName);
     if (image == null) throw new IllegalArgumentException("Image not found: " + imageName);
     return image;
   }
+
   // Method to run a script file
   public void runScript(String scriptPath) {
     try (Scanner scanner = new Scanner(new FileInputStream(scriptPath))) {
